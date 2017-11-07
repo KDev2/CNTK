@@ -194,13 +194,14 @@ class Test:
         suiteDir = os.path.dirname(dirName)
         # suite name will be derived from the path components
         suiteName = os.path.relpath(suiteDir, thisDir).replace('\\', '/')
-        try:
-          test = Test(suiteName,  testName, dirName + "/testcases.yml")
-          Test.allTestsIndexedByFullName[test.fullName.lower()] = test
-        except Exception as e:
-          print("ERROR registering test: " + dirName, file=sys.stderr)
-          traceback.print_exc()
-          sys.exit(1)
+        if testName == 'CNTKv2Library':
+            try:
+                test = Test(suiteName,  testName, dirName + "/testcases.yml")
+                Test.allTestsIndexedByFullName[test.fullName.lower()] = test
+            except Exception as e:
+                print("ERROR registering test: " + dirName, file=sys.stderr)
+                traceback.print_exc()
+                sys.exit(1)
 
   # Runs this test
   #   flavor - "debug" or "release"
