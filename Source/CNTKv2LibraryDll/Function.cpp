@@ -1516,13 +1516,15 @@ namespace CNTK
         {
             if (left_num_seqs == 1)
             {
-                auto new_right = CNTK::Sequence::BroadcastAs(right, left);
+                //auto new_right = CNTK::Sequence::BroadcastAs(right, left);
+                auto new_right = CNTK::ReconcileDynamicAxes(right, left);
                 result.push_back(left);
                 result.push_back(new_right);
             }
             else
             {
-                auto new_left = CNTK::Sequence::BroadcastAs(left, right);
+               // auto new_left = CNTK::Sequence::BroadcastAs(left, right);
+                auto new_left = CNTK::ReconcileDynamicAxes(left, right);
                 result.push_back(new_left);
                 result.push_back(right);
 
@@ -1538,7 +1540,7 @@ namespace CNTK
 
     }
 
-    FunctionPtr BinaryOp(PrimitiveOpType op, const Variable& leftOperand, const Variable& rightOperand, Dictionary&& opConfig, const std::wstring& name, bool autoBroadcast = false)
+    FunctionPtr BinaryOp(PrimitiveOpType op, const Variable& leftOperand, const Variable& rightOperand, Dictionary&& opConfig, const std::wstring& name, bool autoBroadcast = true)
     {
         std::vector<Variable> operands = AutoBroadcastSequence(op, leftOperand, rightOperand, autoBroadcast);
         return AsComposite(MakeSharedObject<PrimitiveFunction>(op, operands, std::move(opConfig), name), name);
